@@ -27,6 +27,7 @@ const calc = {
         this.newFirst = true;
         this.updateDisplay();
     },
+
     updateDisplay: function() {
         document.querySelector("#result").textContent = this.displayString;
     },
@@ -38,7 +39,6 @@ buttons.forEach((button) => {
         if(calc.displayString == '0' || calc.newFirst === true) { calc.displayString = ''; }
         if(+button.textContent || button.textContent === '0'){
             if(!calc.symbol){                           //If we don't yet have a symbol, treat new input as the first number
-                console.log(calc.newFirst);
                 if(calc.newFirst){
                     calc.firstNumber = '';
                     calc.newFirst = false;
@@ -52,6 +52,16 @@ buttons.forEach((button) => {
         }
         else if(button.textContent == '='){
             calc.operate();
+        }
+        else if(button.textContent == '.'){
+            if(!calc.symbol){
+                if(calc.firstNumber % 1 == 0){
+                    calc.firstNumber += '.';
+                } else {
+                    calc.secondNumber += '.';
+                }
+            }
+            calc.displayString += button.textContent;
         }
         else {
             calc.symbol = button.textContent;
