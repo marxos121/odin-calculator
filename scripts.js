@@ -91,6 +91,23 @@ buttons.forEach((button) => {
         else if(button.textContent == 'Clear'){
             calc.clear();
         }
+        else if(button.textContent == '+/-') {
+            if(calc.secondNumber) { 
+                calc.secondNumber = parseInt(calc.secondNumber) * (-1);
+                if(calc.secondNumber < 0) {
+                    calc.displayString = '-' + calc.displayString;
+                } else if(calc.displayString[0] == '-') {
+                    calc.displayString = calc.displayString.substring(1);
+                }
+            } else {
+                calc.firstNumber = parseInt(calc.firstNumber) * (-1)
+                if(calc.firstNumber < 0) {
+                    calc.displayString = '-' + calc.displayString;
+                } else if(calc.displayString[0] == '-') {
+                    calc.displayString = calc.displayString.substring(1);
+                }
+            }
+        }
         else {
             calc.newFirst = false;
             calc.symbol = button.textContent;
