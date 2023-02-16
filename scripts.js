@@ -1,57 +1,54 @@
-function add(a, b){
-    return a+b;
-}
-
-function subtract(a, b){
-    return a-b;
-}
-
-function multiply(a, b){
-    return a*b;
-}
-
-function divide(a, b){
-    return a/b;
-}
-
-function operate(a, b, symbol){
-    switch(symbol){
-        case '+': return add(a, b); break;
-        case '-': return subtract(a, b); break;
-        case '*': return multiply(a, b); break;
-        case '/': return divide(a, b); break;
-    }
-}
-
-let calc = {
+const calc = {
     displayString: '',
-    firstNumber: 0,
-    secondNumber: 0,
+    firstNumber: '',
+    secondNumber: '',
     symbol: '',
     result: 0,
+    display: document.querySelector("#result"),
 
-    add: add(),
-    subtract: subtract(),
-    multiply: multiply(),
-    divide: divide(),
-    operate: operate(),
+    add: function() { result = +this.firstNumber + +this.secondNumber; },
+    subtract: function() { result = +this.firstNumber - +this.secondNumber; },
+    multiply: function() { result = +this.firstNumber * +this.secondNumber; },
+    divide: function() { result = +this.firstNumber / +this.secondNumber; },
+    operate: function() {
+        if(!this.symbol || !this.secondNumber) { return; }
+        switch(this.symbol){
+            case '+': this.add(); break;
+            case '-': this.subtract(); break;
+            case '*': this.multiply(); break;
+            case '/': this.divide(); break;
+        }
+        this.displayString = result;
+        this.updateDisplay();
+    },
+    updateDisplay: function() {
+        console.log(this.display);
+        document.querySelector("#result").textContent = this.displayString;
+        console.log(this);
+    },
 }
 
 const buttons = document.querySelectorAll("button");
 buttons.forEach((button) => {
-    button.addEventListener("click", button, () => {
+    button.addEventListener("click", () => {
         if(+button.textContent){
-            if(!calc.symbol){
-                firstNumber = +button.textContent;
+            if(!calc.symbol){                           //If we don't yet have a symbol, treat new input as the first number
+                calc.firstNumber += button.textContent;
             } else {
-                secondNumber = +button.textContent;
+                calc.secondNumber += button.textContent;
             }
+            
+            if(calc.displayString == '0') { calc.displayString = ''; }
+            calc.displayString += button.textContent;
         }
-        else if(button.textContent === '='){
+        else if(button.textContent == '='){
             calc.operate();
         }
         else {
-            calc.symbol = text.textContent;
+            calc.symbol = button.textContent;
+            calc.displayString = '0';
         }
+
+        calc.updateDisplay();
     }) 
 });
