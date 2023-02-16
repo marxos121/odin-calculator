@@ -18,19 +18,37 @@ const calc = {
             case '*': this.multiply(); break;
             case '/': this.divide(); break;
         }
-        this.firstNumber = this.result;
-        this.secondNumber = '';
-        this.symbol = '';
-        
-        this.displayString = this.result;
-        this.result = 0;
-        this.newFirst = true;
+
+        let temp = parseFloat(this.result.toFixed(4));
+        this.clearAll();
+        this.firstNumber = temp;
+        this.displayString = temp;
         this.updateDisplay();
     },
 
     updateDisplay: function() {
         document.querySelector("#result").textContent = this.displayString;
     },
+
+    clearAll: function() {     
+        this.firstNumber = '';   
+        this.secondNumber = '';
+        this.symbol = '';
+        this.result = 0;
+        this.newFirst = true;
+        this.displayString = '0';
+    },
+
+    clear: function() {
+        if(this.secondNumber) {
+            this.secondNumber = '';
+        } else {
+            this.firstNumber = '';
+        }
+        this.displayString = '0';
+    }
+
+
 }
 
 const buttons = document.querySelectorAll("button");
@@ -67,7 +85,14 @@ buttons.forEach((button) => {
             }
             calc.displayString += button.textContent;
         }
+        else if(button.textContent == 'CE'){
+            calc.clearAll();
+        }
+        else if(button.textContent == 'Clear'){
+            calc.clear();
+        }
         else {
+            calc.newFirst = false;
             calc.symbol = button.textContent;
             calc.displayString = '0';
         }
