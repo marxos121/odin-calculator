@@ -55,11 +55,15 @@ buttons.forEach((button) => {
         }
         else if(button.textContent == '.'){
             if(!calc.symbol){
+                if(calc.newFirst){
+                    calc.firstNumber = '';
+                    calc.newFirst = false;
+                }
                 if(calc.firstNumber % 1 == 0){
                     calc.firstNumber += '.';
-                } else {
+                    }
+                } else if (calc.secondNumber % 1 == 0){
                     calc.secondNumber += '.';
-                }
             }
             calc.displayString += button.textContent;
         }
