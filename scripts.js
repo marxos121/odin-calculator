@@ -27,7 +27,7 @@ const calc = {
     },
 
     updateDisplay: function() {
-        document.querySelector("#result").textContent = this.displayString;
+        document.querySelector(".result").textContent = this.displayString;
     },
 
     clearAll: function() {     
