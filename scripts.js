@@ -27,6 +27,10 @@ const calc = {
     },
 
     updateDisplay: function() {
+        this.displayString = String(this.displayString)
+        if(this.displayString.length > 7) {
+            this.displayString = this.displayString.substring(0, 7);
+        }
         document.querySelector(".result").textContent = this.displayString;
     },
 
@@ -53,7 +57,7 @@ const buttons = document.querySelectorAll("button");
 buttons.forEach((button) => {
     button.addEventListener("click", () => {
         if(calc.displayString == '0' || calc.newFirst === true) { calc.displayString = ''; }
-        if(+button.textContent || button.textContent === '0'){
+        if((+button.textContent || button.textContent === '0') && calc.displayString.length < 7){
             if(!calc.symbol){                           //If we don't yet have a symbol, treat new input as the first number
                 if(calc.newFirst){
                     calc.firstNumber = '';
@@ -93,14 +97,14 @@ buttons.forEach((button) => {
         else if(button.textContent == '+/-') {
             if(calc.secondNumber) { 
                 calc.secondNumber = parseInt(calc.secondNumber) * (-1);
-                if(calc.secondNumber < 0) {
+                if(calc.secondNumber < 0 && calc.displayString.length < 7) {
                     calc.displayString = '-' + calc.displayString;
                 } else if(calc.displayString[0] == '-') {
                     calc.displayString = calc.displayString.substring(1);
                 }
             } else {
                 calc.firstNumber = parseInt(calc.firstNumber) * (-1)
-                if(calc.firstNumber < 0) {
+                if(calc.firstNumber < 0 && calc.displayString.length < 7) {
                     calc.displayString = '-' + calc.displayString;
                 } else if(calc.displayString[0] == '-') {
                     calc.displayString = calc.displayString.substring(1);
