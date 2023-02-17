@@ -87,7 +87,7 @@ buttons.forEach((button) => {
         else if(button.textContent == 'CE'){
             calc.clearAll();
         }
-        else if(button.textContent == 'Clear'){
+        else if(button.textContent == 'C'){
             calc.clearCurrent();
         }
         else if(button.textContent == '+/-') {
