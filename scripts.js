@@ -21,6 +21,9 @@ const calc = {
         }
 
         let temp = parseFloat(this.result.toFixed(4));
+        let formula = document.querySelector(".formula")
+        formula.textContent = `${this.firstNumber} ${this.symbol} ${this.secondNumber} =`;
+        formula.classList.remove('invisible');
         this.clearAll();
         if(temp === Infinity) {
             this.firstNumber = 0;
@@ -34,8 +37,8 @@ const calc = {
 
     updateDisplay: function() {
         this.displayString = String(this.displayString)
-        if(this.displayString.length > maxDisplayLength) {
-            this.displayString = this.displayString.substring(0, maxDisplayLength);
+        if(this.displayString.length > this.maxDisplayLength) {
+            this.displayString = this.displayString.substring(0, this.maxDisplayLength);
         }
         document.querySelector(".result").textContent = this.displayString;
     },
@@ -60,8 +63,9 @@ const calc = {
 }
 
 function handleEvents(key) {
+    document.querySelector(".formula").classList.add("invisible");
     if(calc.displayString == '0' || calc.newFirst === true) { calc.displayString = ''; }
-    if((+key || key === '0') && calc.displayString.length < maxDisplayLength){
+    if((+key || key === '0') && calc.displayString.length < calc.maxDisplayLength){
         if(!calc.symbol){                           //If we don't yet have a symbol, treat new input as the first number
             if(calc.newFirst){
                 calc.firstNumber = '';
@@ -101,14 +105,14 @@ function handleEvents(key) {
     else if(key == '+/-') {
         if(calc.secondNumber) { 
             calc.secondNumber = parseInt(calc.secondNumber) * (-1);
-            if(calc.secondNumber < 0 && calc.displayString.length < maxDisplayLength) {
+            if(calc.secondNumber < 0 && calc.displayString.length < calc.maxDisplayLength) {
                 calc.displayString = '-' + calc.displayString;
             } else if(calc.displayString[0] == '-') {
                 calc.displayString = calc.displayString.substring(1);
             }
         } else {
             calc.firstNumber = parseInt(calc.firstNumber) * (-1)
-            if(calc.firstNumber < 0 && calc.displayString.length < maxDisplayLength) {
+            if(calc.firstNumber < 0 && calc.displayString.length < calc.maxDisplayLength) {
                 calc.displayString = '-' + calc.displayString;
             } else if(calc.displayString[0] == '-') {
                 calc.displayString = calc.displayString.substring(1);
