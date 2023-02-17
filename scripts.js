@@ -5,6 +5,7 @@ const calc = {
     symbol: '',
     result: 0,
     newFirst: true,
+    maxDisplayLength: 7,
 
     add: function() { this.result = +this.firstNumber + +this.secondNumber; },
     subtract: function() { this.result = +this.firstNumber - +this.secondNumber; },
@@ -33,8 +34,8 @@ const calc = {
 
     updateDisplay: function() {
         this.displayString = String(this.displayString)
-        if(this.displayString.length > 7) {
-            this.displayString = this.displayString.substring(0, 7);
+        if(this.displayString.length > maxDisplayLength) {
+            this.displayString = this.displayString.substring(0, maxDisplayLength);
         }
         document.querySelector(".result").textContent = this.displayString;
     },
@@ -58,70 +59,87 @@ const calc = {
     },
 }
 
+function handleEvents(key) {
+    if(calc.displayString == '0' || calc.newFirst === true) { calc.displayString = ''; }
+    if((+key || key === '0') && calc.displayString.length < maxDisplayLength){
+        if(!calc.symbol){                           //If we don't yet have a symbol, treat new input as the first number
+            if(calc.newFirst){
+                calc.firstNumber = '';
+                calc.newFirst = false;
+            }
+            calc.firstNumber += key;
+        } else {
+            calc.secondNumber += key;
+        }
+
+        calc.displayString += key;
+    }
+    else if(key == '='){
+        calc.operate();
+    }
+    else if(key == '.'){
+        if(!calc.symbol){
+            if(calc.newFirst){
+                calc.firstNumber = '';
+                calc.newFirst = false;
+            }
+            if(calc.firstNumber.indexOf('.') === -1){
+                calc.firstNumber += '.';
+                calc.displayString += key;
+                }
+            } else if (calc.secondNumber.indexOf('.') === -1){
+                calc.secondNumber += '.';
+                calc.displayString += key;
+        }
+    }
+    else if(key == 'CE'){
+        calc.clearAll();
+    }
+    else if(key == 'C'){
+        calc.clearCurrent();
+    }
+    else if(key == '+/-') {
+        if(calc.secondNumber) { 
+            calc.secondNumber = parseInt(calc.secondNumber) * (-1);
+            if(calc.secondNumber < 0 && calc.displayString.length < maxDisplayLength) {
+                calc.displayString = '-' + calc.displayString;
+            } else if(calc.displayString[0] == '-') {
+                calc.displayString = calc.displayString.substring(1);
+            }
+        } else {
+            calc.firstNumber = parseInt(calc.firstNumber) * (-1)
+            if(calc.firstNumber < 0 && calc.displayString.length < maxDisplayLength) {
+                calc.displayString = '-' + calc.displayString;
+            } else if(calc.displayString[0] == '-') {
+                calc.displayString = calc.displayString.substring(1);
+            }
+        }
+    }
+    else if(key == '+' || key == '-' || key == '*' || key == '/'){
+        calc.newFirst = false;
+        calc.symbol = key;
+        calc.displayString = '0';
+    }
+
+    calc.updateDisplay();
+}
+
 const buttons = document.querySelectorAll("button");
 buttons.forEach((button) => {
     button.addEventListener("click", () => {
-        if(calc.displayString == '0' || calc.newFirst === true) { calc.displayString = ''; }
-        if((+button.textContent || button.textContent === '0') && calc.displayString.length < 7){
-            if(!calc.symbol){                           //If we don't yet have a symbol, treat new input as the first number
-                if(calc.newFirst){
-                    calc.firstNumber = '';
-                    calc.newFirst = false;
-                }
-                calc.firstNumber += button.textContent;
-            } else {
-                calc.secondNumber += button.textContent;
-            }
+    handleEvents(button.textContent);
+})});
 
-            calc.displayString += button.textContent;
+document.addEventListener('keyup', (e) => {
+    let key = e.key == 'Escape' ? 'CE' : e.key;
+    let valid = false;
+    for(button of buttons){
+        if(button.textContent == key) {
+            valid = true;
+            break;
         }
-        else if(button.textContent == '='){
-            calc.operate();
-        }
-        else if(button.textContent == '.'){
-            if(!calc.symbol){
-                if(calc.newFirst){
-                    calc.firstNumber = '';
-                    calc.newFirst = false;
-                }
-                if(calc.firstNumber.indexOf('.') === -1){
-                    calc.firstNumber += '.';
-                    calc.displayString += button.textContent;
-                    }
-                } else if (calc.secondNumber.indexOf('.') === -1){
-                    calc.secondNumber += '.';
-                    calc.displayString += button.textContent;
-            }
-        }
-        else if(button.textContent == 'CE'){
-            calc.clearAll();
-        }
-        else if(button.textContent == 'C'){
-            calc.clearCurrent();
-        }
-        else if(button.textContent == '+/-') {
-            if(calc.secondNumber) { 
-                calc.secondNumber = parseInt(calc.secondNumber) * (-1);
-                if(calc.secondNumber < 0 && calc.displayString.length < 7) {
-                    calc.displayString = '-' + calc.displayString;
-                } else if(calc.displayString[0] == '-') {
-                    calc.displayString = calc.displayString.substring(1);
-                }
-            } else {
-                calc.firstNumber = parseInt(calc.firstNumber) * (-1)
-                if(calc.firstNumber < 0 && calc.displayString.length < 7) {
-                    calc.displayString = '-' + calc.displayString;
-                } else if(calc.displayString[0] == '-') {
-                    calc.displayString = calc.displayString.substring(1);
-                }
-            }
-        }
-        else {
-            calc.newFirst = false;
-            calc.symbol = button.textContent;
-            calc.displayString = '0';
-        }
-
-        calc.updateDisplay();
-    }) 
+    }
+    if(valid){
+        handleEvents(key);
+    }
 });

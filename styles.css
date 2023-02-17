@@ -31,6 +31,7 @@ p {
     background-color: grey;
     text-align: end;
     font-size: 3rem;
+    font-weight: bold;
     grid-column: span 4;
     align-self: center;
 
