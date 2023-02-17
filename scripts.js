@@ -21,8 +21,13 @@ const calc = {
 
         let temp = parseFloat(this.result.toFixed(4));
         this.clearAll();
-        this.firstNumber = temp;
-        this.displayString = temp;
+        if(temp === Infinity) {
+            this.firstNumber = 0;
+            this.displayString = 'ERROR';
+        } else {
+            this.firstNumber = temp;
+            this.displayString = temp;
+        }
         this.updateDisplay();
     },
 
