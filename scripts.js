@@ -39,16 +39,14 @@ const calc = {
         this.displayString = '0';
     },
 
-    clear: function() {
+    clearCurrent: function() {
         if(this.secondNumber) {
             this.secondNumber = '';
         } else {
             this.firstNumber = '';
         }
         this.displayString = '0';
-    }
-
-
+    },
 }
 
 const buttons = document.querySelectorAll("button");
@@ -89,7 +87,7 @@ buttons.forEach((button) => {
             calc.clearAll();
         }
         else if(button.textContent == 'Clear'){
-            calc.clear();
+            calc.clearCurrent();
         }
         else if(button.textContent == '+/-') {
             if(calc.secondNumber) { 
