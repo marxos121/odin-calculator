@@ -75,13 +75,14 @@ buttons.forEach((button) => {
                     calc.firstNumber = '';
                     calc.newFirst = false;
                 }
-                if(calc.firstNumber % 1 == 0){
+                if(calc.firstNumber.indexOf('.') === -1){
                     calc.firstNumber += '.';
+                    calc.displayString += button.textContent;
                     }
-                } else if (calc.secondNumber % 1 == 0){
+                } else if (calc.secondNumber.indexOf('.') === -1){
                     calc.secondNumber += '.';
+                    calc.displayString += button.textContent;
             }
-            calc.displayString += button.textContent;
         }
         else if(button.textContent == 'CE'){
             calc.clearAll();
