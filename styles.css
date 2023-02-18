@@ -65,6 +65,10 @@ p {
     border: none;
 }
 
+.num-button {
+    background-color: rgb(170, 210, 245);
+}
+
 .utility-button {
     background-color: orange;
     border-radius: 50%;
