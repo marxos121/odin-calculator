@@ -135,7 +135,7 @@ buttons.forEach((button) => {
 })});
 
 document.addEventListener('keyup', (e) => {
-    let key = e.key == 'Escape' ? 'CE' : e.key;
+    let key = e.key == 'Escape' ? 'CE' : (e.key == 'c' ? 'C' : e.key);
     let valid = false;
     for(button of buttons){
         if(button.textContent == key) {
