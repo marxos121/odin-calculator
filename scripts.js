@@ -1,6 +1,6 @@
 const calc = {
   displayString: "0",
-  firstNumber: "",
+  firstNumber: "0",
   secondNumber: "",
   symbol: "",
   result: 0,
