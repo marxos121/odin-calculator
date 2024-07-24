@@ -110,16 +110,16 @@ function handleEvents(key) {
   } else if (key == ".") {
     if (!calc.symbol) {
       if (calc.newFirst) {
-        calc.firstNumber = "";
+        calc.firstNumber = calc.displayString = "0";
         calc.newFirst = false;
       }
       if (calc.firstNumber.indexOf(".") === -1) {
         calc.firstNumber += ".";
-        calc.displayString += key;
+        calc.displayString += ".";
       }
     } else if (calc.secondNumber.indexOf(".") === -1) {
       calc.secondNumber += ".";
-      calc.displayString += key;
+      calc.displayString += ".";
     }
   } else if (key == "CE") {
     calc.clearAll();
@@ -130,7 +130,7 @@ function handleEvents(key) {
       return;
     }
     if (calc.secondNumber) {
-      calc.secondNumber = parseInt(calc.secondNumber) * -1;
+      calc.secondNumber = parseFloat(calc.secondNumber) * -1;
       if (
         calc.secondNumber < 0 &&
         calc.displayString.length < calc.maxDisplayLength
@@ -140,7 +140,7 @@ function handleEvents(key) {
         calc.displayString = calc.displayString.substring(1);
       }
     } else {
-      calc.firstNumber = parseInt(calc.firstNumber) * -1;
+      calc.firstNumber = parseFloat(calc.firstNumber) * -1;
       if (
         calc.firstNumber < 0 &&
         calc.displayString.length < calc.maxDisplayLength
