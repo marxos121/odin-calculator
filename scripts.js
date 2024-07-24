@@ -39,9 +39,11 @@ const calc = {
     }
 
     const temp = parseFloat(this.result.toFixed(4));
-    const formula = document.querySelector(".formula");
-    formula.textContent = `${this.firstNumber} ${this.symbol} ${this.secondNumber} =`;
-    formula.classList.remove("invisible");
+    const formula = document.querySelectorAll(".formula");
+    formula[0].textContent = `${this.firstNumber}`;
+    formula[1].textContent = `${this.symbol} ${this.secondNumber}`;
+    formula.forEach((el) => el.classList.remove("invisible"));
+
     this.clearAll();
     if (temp === Infinity) {
       this.firstNumber = 0;
@@ -84,7 +86,8 @@ const calc = {
 };
 
 function handleEvents(key) {
-  document.querySelector(".formula").classList.add("invisible");
+  const formula = document.querySelectorAll(".formula");
+  formula.forEach((el) => el.classList.add("invisible"));
 
   if (
     (+key || key === "0") &&
@@ -118,6 +121,9 @@ function handleEvents(key) {
         calc.displayString += ".";
       }
     } else if (calc.secondNumber.indexOf(".") === -1) {
+      if (!calc.secondNumber) {
+        calc.secondNumber = "0";
+      }
       calc.secondNumber += ".";
       calc.displayString += ".";
     }
