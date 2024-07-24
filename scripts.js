@@ -38,8 +38,8 @@ const calc = {
         break;
     }
 
-    let temp = parseFloat(this.result.toFixed(4));
-    let formula = document.querySelector(".formula");
+    const temp = parseFloat(this.result.toFixed(4));
+    const formula = document.querySelector(".formula");
     formula.textContent = `${this.firstNumber} ${this.symbol} ${this.secondNumber} =`;
     formula.classList.remove("invisible");
     this.clearAll();
@@ -167,7 +167,7 @@ buttons.forEach((button) => {
 });
 
 document.addEventListener("keydown", (e) => {
-  let key = e.key == "Escape" ? "CE" : e.key == "c" ? "C" : e.key;
+  const key = e.key == "Escape" ? "CE" : e.key == "c" ? "C" : e.key;
   for (button of buttons) {
     if (button.textContent == key) {
       handleEvents(key);
