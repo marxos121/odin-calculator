@@ -1,11 +1,11 @@
 const calc = {
-    displayString: '',
-    firstNumber: '',
-    secondNumber: '',
-    symbol: '',
-    result: 0,
-    newFirst: true,
-    maxDisplayLength: 7,
+  displayString: "0",
+  firstNumber: "",
+  secondNumber: "",
+  symbol: "",
+  result: 0,
+  newFirst: true,
+  maxDisplayLength: 7,
 
     add: function() { this.result = +this.firstNumber + +this.secondNumber; },
     subtract: function() { this.result = +this.firstNumber - +this.secondNumber; },
@@ -102,22 +102,8 @@ function handleEvents(key) {
     else if(key == 'C'){
         calc.clearCurrent();
     }
-    else if(key == '+/-') {
-        if(calc.secondNumber) { 
-            calc.secondNumber = parseInt(calc.secondNumber) * (-1);
-            if(calc.secondNumber < 0 && calc.displayString.length < calc.maxDisplayLength) {
-                calc.displayString = '-' + calc.displayString;
-            } else if(calc.displayString[0] == '-') {
-                calc.displayString = calc.displayString.substring(1);
-            }
-        } else {
-            calc.firstNumber = parseInt(calc.firstNumber) * (-1)
-            if(calc.firstNumber < 0 && calc.displayString.length < calc.maxDisplayLength) {
-                calc.displayString = '-' + calc.displayString;
-            } else if(calc.displayString[0] == '-') {
-                calc.displayString = calc.displayString.substring(1);
-            }
-        }
+    if (calc.displayString == "0") {
+      return;
     }
     else if(key == '+' || key == '-' || key == '*' || key == '/'){
         calc.newFirst = false;
