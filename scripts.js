@@ -54,7 +54,6 @@ const calc = {
     this.clearAll();
     this.firstNumber = resString;
     this.displayString = resString;
-    this.updateDisplay();
   },
 
   updateDisplay: function () {
@@ -146,6 +145,9 @@ function handleEvents(key) {
         calc.displayString = "-" + calc.displayString;
       } else if (calc.displayString[0] == "-") {
         calc.displayString = calc.displayString.substring(1);
+      } else {
+        // We were about to add a '-' but it turned out the new string would be too long
+        calc.secondNumber = parseFloat(calc.secondNumber) * -1;
       }
     } else {
       calc.firstNumber = parseFloat(calc.firstNumber) * -1;
@@ -156,6 +158,9 @@ function handleEvents(key) {
         calc.displayString = "-" + calc.displayString;
       } else if (calc.displayString[0] == "-") {
         calc.displayString = calc.displayString.substring(1);
+      } else {
+        // We were about to add a '-' but it turned out the new string would be too long
+        calc.firstNumber = parseFloat(calc.firstNumber) * -1;
       }
     }
   } else if (key == "+" || key == "-" || key == "*" || key == "/") {
@@ -185,3 +190,11 @@ document.addEventListener("keydown", (e) => {
     }
   }
 });
+
+/*
+2. See if you can make the code cleaner
+
+3. DisplayString is probably redundant
+
+4. Try to remove DOM related actions from calc
+*/
