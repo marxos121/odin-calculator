@@ -1,23 +1,19 @@
 const calc = {
-  displayString: "0",
   firstNumber: "",
   secondNumber: "",
   symbol: "",
-  result: 0,
-  newFirst: true,
-  maxDisplayLength: 7,
 
   add: function () {
-    this.result = +this.firstNumber + +this.secondNumber;
+    return +this.firstNumber + +this.secondNumber;
   },
   subtract: function () {
-    this.result = +this.firstNumber - +this.secondNumber;
+    return +this.firstNumber - +this.secondNumber;
   },
   multiply: function () {
-    this.result = +this.firstNumber * +this.secondNumber;
+    return +this.firstNumber * +this.secondNumber;
   },
   divide: function () {
-    this.result = +this.firstNumber / +this.secondNumber;
+    return +this.firstNumber / +this.secondNumber;
   },
   operate: function () {
     if (!this.symbol || !this.secondNumber) {
@@ -25,135 +21,116 @@ const calc = {
     }
     switch (this.symbol) {
       case "+":
-        this.add();
-        break;
+        return this.add();
       case "-":
-        this.subtract();
-        break;
+        return this.subtract();
       case "*":
-        this.multiply();
-        break;
+        return this.multiply();
       case "/":
-        this.divide();
-        break;
+        return this.divide();
     }
-
-    const formula = document.querySelectorAll(".formula");
-    formula[0].textContent = this.firstNumber;
-    formula[1].textContent = `${this.symbol} ${this.secondNumber}`;
-    formula.forEach((el) => el.classList.remove("invisible"));
-
-    let resString = String(this.result);
-    if (resString.length > this.maxDisplayLength) {
-      resString = this.result.toExponential(1);
-    }
-
-    this.clearAll();
-    this.firstNumber = resString;
-    this.displayString = resString;
-  },
-
-  updateDisplay: function () {
-    document.querySelector(".result").textContent = this.displayString;
   },
 
   clearAll: function () {
     this.firstNumber = "";
     this.secondNumber = "";
     this.symbol = "";
-    this.result = 0;
-    this.newFirst = true;
-    this.displayString = "0";
-  },
-
-  clearCurrent: function () {
-    if (this.secondNumber) {
-      this.secondNumber = "";
-    } else {
-      this.firstNumber = "";
-    }
-    this.displayString = "0";
   },
 };
+
+const MAX_DISPLAY_LENGTH = 7;
+let newFirst = true;
+
+const formula = document.querySelectorAll(".formula");
+const displayString = document.querySelector(".result");
 
 function handleEvents(key) {
   if (
     (+key || key === "0") &&
-    (calc.displayString.length < calc.maxDisplayLength ||
-      calc.displayString.includes("e"))
+    (displayString.textContent.length < MAX_DISPLAY_LENGTH ||
+      displayString.textContent.includes("e"))
   ) {
     hideFormula();
-    if (calc.displayString == "0" || calc.newFirst === true) {
-      calc.displayString = "";
+    if (displayString.textContent === "0" || newFirst === true) {
+      displayString.textContent = "";
     }
     if (!calc.symbol) {
       //If we don't yet have a symbol, treat new input as the first number
-      if (calc.newFirst) {
+      if (newFirst) {
         calc.firstNumber = "";
-        calc.newFirst = false;
+        newFirst = false;
       }
       calc.firstNumber += key;
     } else {
       calc.secondNumber += key;
     }
 
-    calc.displayString += key;
-  } else if (key == "=") {
-    calc.operate();
-  } else if (key == ".") {
+    displayString.textContent += key;
+  } else if (key === "=") {
+    const result = calc.operate();
+    if (result) {
+      updateFormula();
+      updateResult(result);
+      newFirst = true;
+    }
+  } else if (key === ".") {
     hideFormula();
     if (!calc.symbol) {
-      if (calc.newFirst) {
-        calc.firstNumber = calc.displayString = "0";
-        calc.newFirst = false;
+      if (newFirst) {
+        calc.firstNumber = displayString.textContent = "0";
+        newFirst = false;
       }
       if (calc.firstNumber.indexOf(".") === -1) {
         calc.firstNumber += ".";
-        calc.displayString += ".";
+        displayString.textContent += ".";
       }
     } else if (calc.secondNumber.indexOf(".") === -1) {
       if (!calc.secondNumber) {
         calc.secondNumber = "0";
       }
       calc.secondNumber += ".";
-      calc.displayString += ".";
+      displayString.textContent += ".";
     }
-  } else if (key == "CE") {
+  } else if (key === "CE") {
     hideFormula();
     calc.clearAll();
-  } else if (key == "C") {
+    displayString.textContent = "0";
+    newFirst = true;
+  } else if (key === "C") {
     hideFormula();
-    calc.clearCurrent();
+    clearCurrent();
+    displayString.textContent = "0";
   } else if (
-    key == "+/-" &&
-    !(calc.displayString == "0" || calc.displayString.includes("e"))
+    key === "+/-" &&
+    !(
+      displayString.textContent === "0" ||
+      displayString.textContent.includes("e")
+    )
   ) {
     hideFormula();
     if (calc.secondNumber) {
       if (
         (calc.secondNumber > 0 &&
-          calc.displayString.length < calc.maxDisplayLength) ||
+          displayString.textContent.length < MAX_DISPLAY_LENGTH) ||
         calc.secondNumber < 0
       ) {
         calc.secondNumber = String(calc.secondNumber * -1);
-        calc.displayString = calc.secondNumber;
+        displayString.textContent = calc.secondNumber;
       }
     } else if (
       (calc.firstNumber > 0 &&
-        calc.displayString.length < calc.maxDisplayLength) ||
+        displayString.textContent.length < MAX_DISPLAY_LENGTH) ||
       calc.firstNumber < 0
     ) {
       calc.firstNumber = String(calc.firstNumber * -1);
-      calc.displayString = calc.firstNumber;
+      displayString.textContent = calc.firstNumber;
     }
-  } else if (key == "+" || key == "-" || key == "*" || key == "/") {
+  } else if (key === "+" || key === "-" || key === "*" || key === "/") {
     hideFormula();
-    calc.newFirst = false;
+    newFirst = false;
     calc.symbol = key;
-    calc.displayString = "0";
+    displayString.textContent = "0";
   }
-
-  calc.updateDisplay();
 }
 
 const buttons = document.querySelectorAll("button");
@@ -164,9 +141,9 @@ buttons.forEach((button) => {
 });
 
 document.addEventListener("keydown", (e) => {
-  const key = e.key == "Escape" ? "CE" : e.key == "c" ? "C" : e.key;
+  const key = e.key === "Escape" ? "CE" : e.key === "c" ? "C" : e.key;
   for (button of buttons) {
-    if (button.textContent == key) {
+    if (button.textContent === key) {
       handleEvents(key);
       return;
     }
@@ -174,6 +151,30 @@ document.addEventListener("keydown", (e) => {
 });
 
 function hideFormula() {
-  const formula = document.querySelectorAll(".formula");
   formula.forEach((el) => el.classList.add("invisible"));
+}
+
+function updateFormula() {
+  formula[0].textContent = calc.firstNumber;
+  formula[1].textContent = `${calc.symbol} ${calc.secondNumber}`;
+  formula.forEach((el) => el.classList.remove("invisible"));
+}
+
+function updateResult(result) {
+  let resString = String(result);
+  if (resString.length > MAX_DISPLAY_LENGTH) {
+    resString = result.toExponential(1);
+  }
+
+  calc.clearAll();
+  calc.firstNumber = resString;
+  displayString.textContent = resString;
+}
+
+function clearCurrent() {
+  if (calc.secondNumber) {
+    calc.secondNumber = "";
+  } else {
+    calc.firstNumber = "";
+  }
 }
